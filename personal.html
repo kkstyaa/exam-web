@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language School | Личный кабинет</title>
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+</head>
+<body>
+    <!-- шапка сайта -->
+    <header class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <img src="img/logo.png" alt="Логотип Школы английского языка" height="40" class="me-2">
+                <span class="fw-bold">Language School</span>
+            </a>
+            
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="index.html">
+                    <i class="bi bi-house-door me-1"></i>На главную
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- область для уведомлений -->
+    <div class="container mt-3">
+        <div id="notification-area"></div>
+    </div>
+
+    <!-- Ззаголовок личного кабинета -->
+    <section class="bg-light py-4">
+        <div class="container">
+            <h1 class="mb-0">Добро пожаловать в личный кабинет</h1>
+            <p class="text-muted">Здесь вы можете управлять своими заявками на обучение</p>
+        </div>
+    </section>
+
+    <!-- основной контент -->
+    <main class="py-5">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="card-title mb-4">Ваши заявки</h2>
+                            
+                            <!-- таблица заказов -->
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="orders-table">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>№</th>
+                                            <th>Название курса/Репетитор</th>
+                                            <th>Дата занятия</th>
+                                            <th>Время</th>
+                                            <th>Количество человек</th>
+                                            <th>Общая стоимость</th>
+                                            <th>Статус</th>
+                                            <th>Действия</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="orders-body">
+                                        <!-- Данные загружаются через JS!!!! -->
+                                        <tr id="no-orders-row">
+                                            <td colspan="8" class="text-center py-5">
+                                                <div class="text-muted">
+                                                    <i class="bi bi-inbox fs-1 mb-3"></i>
+                                                    <p class="fs-5">У вас пока нет заявок</p>
+                                                    <a href="index.html" class="btn btn-primary">Посмотреть курсы</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- пагинация заказов -->
+                            <nav aria-label="Пагинация заказов" class="mt-4" id="orders-pagination" style="display: none;">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1">Предыдущая</a>
+                                    </li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">Следующая</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- доп блок со статистикой -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card text-white bg-success mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title">Активные заявки</h6>
+                                    <h2 class="mb-0" id="active-orders">0</h2>
+                                </div>
+                                <i class="bi bi-check-circle fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-info mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title">Всего часов</h6>
+                                    <h2 class="mb-0" id="total-hours">0</h2>
+                                </div>
+                                <i class="bi bi-clock fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-warning mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title">Общая сумма</h6>
+                                    <h2 class="mb-0" id="total-amount">0 руб.</h2>
+                                </div>
+                                <i class="bi bi-currency-ruble fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- футер -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Контакты</h5>
+                    <p>Email: <a href="mailto:info@english-school.ru">info@lang-school.ru</a></p>
+                    <p>Телефон: <a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
+                    <p>Адрес: Москва, ул. Примерная, д. 1</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Социальные сети</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white"><i class="bi bi-facebook fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-twitter fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-instagram fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-vk fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-telegram fs-4"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="bg-light">
+            <div class="text-center">
+                <p>&copy; 2026 Language School. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- модальное окно просмотра заявки -->
+    <div class="modal fade" id="viewOrderModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Подробности заявки #<span id="order-id"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Тип:</strong> <span id="order-type"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Дата создания:</strong> <span id="order-created"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Название:</strong> <span id="order-name"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Дата начала:</strong> <span id="order-start-date"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Время:</strong> <span id="order-time"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Продолжительность:</strong> <span id="order-duration"></span> часов
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Количество студентов:</strong> <span id="order-persons"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Стоимость:</strong> <span id="order-price"></span> руб.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong>Примененные опции:</strong>
+                        <div id="order-options" class="mt-2"></div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6>Примененные скидки:</h6>
+                        <div id="order-discounts">
+                            <p class="mb-0">Нет примененных скидок</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- модальное окно редактирования -->
+    <div class="modal fade" id="editOrderModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Редактирование заявки #<span id="edit-order-id"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- форма редактирования загружается динамически -->
+                    <div id="edit-form-container">
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Загрузка...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" id="save-order">Сохранить изменения</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно подтверждения удаления -->
+    <div class="modal fade" id="deleteOrderModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Подтверждение удаления</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Вы уверены, что хотите удалить заявку #<span id="delete-order-id"></span>?</p>
+                    <p class="text-danger"><small>Это действие нельзя отменить.</small></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete">Да, удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
