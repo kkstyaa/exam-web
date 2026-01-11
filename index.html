@@ -131,6 +131,182 @@
             </div>
         </div>
     </section>
+
+        <!-- блок с доступными курсами -->
+    <section id="courses" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Предлагаемые курсы</h2>
+            
+            <!-- форма для поиска курсов -->
+            <div class="row mb-4">
+                <div class="col-md-8 mx-auto">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Поиск курсов</h5>
+                            <form id="course-search-form">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="course-name" class="form-label">Поиск по названию</label>
+                                        <input type="text" class="form-control" id="course-name" placeholder="Введите название курса">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="course-level" class="form-label">Уровень курса</label>
+                                        <select class="form-select" id="course-level">
+                                            <option value="">Все уровни</option>
+                                            <option value="beginner">Начальный</option>
+                                            <option value="intermediate">Средний</option>
+                                            <option value="advanced">Продвинутый</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- таблица курсов -->
+            <div class="table-responsive">
+                <table class="table table-hover" id="courses-table">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Название курса</th>
+                            <th>Преподаватель</th>
+                            <th>Уровень</th>
+                            <th>Продолжительность</th>
+                            <th>Часов в неделю</th>
+                            <th>Стоимость/час</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="courses-body">
+                        <!-- Данные загружаются через JS!!!! -->
+                        <tr>
+                            <td colspan="7" class="text-center">Загрузка курсов...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- пагинация курсов -->
+            <nav aria-label="Пагинация курсов">
+                <ul class="pagination justify-content-center" id="courses-pagination">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Предыдущая</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Следующая</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+
+    <!-- поиск репетиторов -->
+    <section id="tutors" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Поиск репетиторов</h2>
+            
+            <!-- форма поиска репетиторов -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Найдите подходящего репетитора</h5>
+                    <form id="tutor-search-form">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="tutor-language" class="form-label">Язык обучения</label>
+                                <input type="text" class="form-control" id="tutor-language" placeholder="Введите язык">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="tutor-level" class="form-label">Уровень языка</label>
+                                <select class="form-select" id="tutor-level">
+                                    <option value="">Все уровни</option>
+                                    <option value="beginner">Начальный</option>
+                                    <option value="intermediate">Средний</option>
+                                    <option value="advanced">Продвинутый</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="tutor-experience" class="form-label">Опыт (лет)</label>
+                                <input type="number" class="form-control" id="tutor-experience" placeholder="Минимальный опыт">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- таблица репетиторов -->
+            <div class="table-responsive">
+                <table class="table table-hover" id="tutors-table">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Имя репетитора</th>
+                            <th>Уровень языка</th>
+                            <th>Языки преподавания</th>
+                            <th>Опыт (лет)</th>
+                            <th>Ставка (руб./час)</th>
+                            <th>Фото</th>
+                            <th>Выбрать</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tutors-body">
+                        <!-- Данные загружаются через JS!!!! -->
+                        <tr>
+                            <td colspan="7" class="text-center">Загрузка репетиторов...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- кнопка формы заказа -->
+    <section class="py-5">
+        <div class="container text-center">
+            <h3 class="mb-4">Готовы начать обучение?</h3>
+            <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#orderModal">
+                Записаться на курс
+            </button>
+        </div>
+    </section>
+
+        <!-- футер -->
+    <footer id="contact" class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Language School</h5>
+                    <p>Мы помогаем вам достичь беглости в любом языке через качественное образование и индивидуальный подход.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Контакты</h5>
+                    <p>Email:  <a href="mailto:info@english-school.ru" class="text-white text-decoration-none">
+                        info@lang-school.ru
+                    </a></p>
+                    <p>Телефон: <a href="tel:+74951234567" class="text-white text-decoration-none">
+                        +7 (495) 123-45-67
+                    </a></p>
+                    <p>Адрес: Москва, ул. Примерная, д. 1</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Социальные сети</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white"><i class="bi bi-facebook fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-twitter fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-instagram fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-vk fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-telegram fs-4"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="bg-light">
+            <div class="text-center">
+                <p>&copy; 2026 Language School. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
