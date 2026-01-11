@@ -39,7 +39,7 @@
         </div>
     </section>
 
-     <!-- основной контент -->
+    <!-- основной контент -->
     <main class="py-5">
         <div class="container">
             <div class="row mb-4">
@@ -139,7 +139,146 @@
             </div>
         </div>
     </main>
-     <!-- Bootstrap JS -->
+
+    <!-- футер -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Контакты</h5>
+                    <p>Email: <a href="mailto:info@english-school.ru">info@lang-school.ru</a></p>
+                    <p>Телефон: <a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
+                    <p>Адрес: Москва, ул. Примерная, д. 1</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Социальные сети</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white"><i class="bi bi-facebook fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-twitter fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-instagram fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-vk fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-telegram fs-4"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="bg-light">
+            <div class="text-center">
+                <p>&copy; 2026 Language School. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- модальное окно просмотра заявки -->
+    <div class="modal fade" id="viewOrderModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Подробности заявки #<span id="order-id"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Тип:</strong> <span id="order-type"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Дата создания:</strong> <span id="order-created"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Название:</strong> <span id="order-name"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Дата начала:</strong> <span id="order-start-date"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Время:</strong> <span id="order-time"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Продолжительность:</strong> <span id="order-duration"></span> часов
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Количество студентов:</strong> <span id="order-persons"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Стоимость:</strong> <span id="order-price"></span> руб.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong>Примененные опции:</strong>
+                        <div id="order-options" class="mt-2"></div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6>Примененные скидки:</h6>
+                        <div id="order-discounts">
+                            <p class="mb-0">Нет примененных скидок</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- модальное окно редактирования -->
+    <div class="modal fade" id="editOrderModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Редактирование заявки #<span id="edit-order-id"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- форма редактирования загружается динамически -->
+                    <div id="edit-form-container">
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Загрузка...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" id="save-order">Сохранить изменения</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно подтверждения удаления -->
+    <div class="modal fade" id="deleteOrderModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Подтверждение удаления</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Вы уверены, что хотите удалить заявку #<span id="delete-order-id"></span>?</p>
+                    <p class="text-danger"><small>Это действие нельзя отменить.</small></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete">Да, удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
