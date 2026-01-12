@@ -276,3 +276,351 @@ async function deleteOrder(orderId) {
         throw error;
     }
 }
+//ОТОБРАЖЕНИЕ ДАННЫХ
+
+// Отобразить курсы
+/*
+ * Отображает курсы в таблице с пагинацией
+ * @param {Array} courses - Массив курсов
+ * @param {number} page - Номер страницы
+ */
+function displayCourses(courses, page = 1) {
+    const tbody = document.getElementById('courses-body');
+    if (!tbody) return; //если таблицы нет на странице, выходим
+    
+    //рассчитываем, какие курсы показывать на текущей странице
+    const startIndex = (page - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const coursesToShow = courses.slice(startIndex, endIndex);
+    
+    //очищаем таблицу
+    tbody.innerHTML = '';
+    
+    //если курсов нет, показываем сообщение
+    if (coursesToShow.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center py-4">
+                    <div class="text-muted">
+                        <i class="bi bi-book fs-1 mb-3"></i>
+                        <p class="fs-5">Курсы не найдены</p>
+                    </div>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+     //создаем строки для каждого курса
+    coursesToShow.forEach(course => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>
+                <strong>${course.name}</strong>
+                <div class="small text-muted">${course.description.substring(0, 50)}...</div>
+            </td>
+            <td>${course.teacher}</td>
+            <td>
+                <span class="badge bg-${getLevelColor(course.level)}">
+                    ${translateLevel(course.level)}
+                </span>
+            </td>
+            <td>${course.total_length} недель</td>
+            <td>${course.week_length} часов/неделя</td>
+            <td>${course.course_fee_per_hour} руб./час</td>
+            <td>
+                <button class="btn btn-sm btn-primary select-course-btn" data-course-id="${course.id}">
+                    Выбрать
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row); //добавляем строку в таблицу
+    });
+    
+    //настраиваем пагинацию
+    setupPagination(courses, 'courses-pagination', page, (pageNum) => {
+        displayCourses(courses, pageNum);
+        setupCourseSelection(); //при смене страницы нужно заново настраивать обработчики
+    });
+}
+
+// Отобразить репетиторов
+/*
+ * Отображает репетиторов в таблице с фильтрацией
+ * @param {Array} tutors - Массив репетиторов
+ * @param {Object} filters - Фильтры для поиска
+ */
+function displayTutors(tutors, filters = {}) {
+    const tbody = document.getElementById('tutors-body');
+    if (!tbody) return;
+    
+    //применяем фильтры
+    let filteredTutors = tutors;
+    
+    //фильтр по языку
+    if (filters.language) {
+        filteredTutors = filteredTutors.filter(tutor => 
+            tutor.languages_offered && 
+            tutor.languages_offered.some(lang => 
+                lang.toLowerCase().includes(filters.language.toLowerCase())
+            )
+        );
+    }
+    //фильтр по уровню
+    if (filters.level) {
+        filteredTutors = filteredTutors.filter(tutor => 
+            tutor.language_level.toLowerCase() === filters.level.toLowerCase()
+        );
+    }
+    
+    //фильтр по опыту
+    if (filters.experience) {
+        filteredTutors = filteredTutors.filter(tutor => 
+            tutor.work_experience >= parseInt(filters.experience)
+        );
+    }
+    
+    //очищаем таблицу
+    tbody.innerHTML = '';
+    
+    //если репетиторов нет, показываем сообщение
+    if (filteredTutors.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center py-4">
+                    <div class="text-muted">
+                        <i class="bi bi-person fs-1 mb-3"></i>
+                        <p class="fs-5">Репетиторы не найдены</p>
+                    </div>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    //создаем строки для каждого репетитора
+    filteredTutors.forEach(tutor => {
+        //проверяем, выбран ли этот репетитор
+        const isSelected = selectedTutor && selectedTutor.id === tutor.id;
+        
+        const row = document.createElement('tr');
+         //подсвечиваем строку, если репетитор выбран
+        if (isSelected) {
+            row.classList.add('table-primary');
+        }
+        row.innerHTML = `
+            <td>${tutor.name}</td>
+            <td>
+                <span class="badge bg-${getLevelColor(tutor.language_level)}">
+                    ${translateLevel(tutor.language_level)}
+                </span>
+            </td>
+            <td>${tutor.languages_offered?.join(', ') || 'Не указано'}</td>
+            <td>${tutor.work_experience} лет</td>
+            <td>${tutor.price_per_hour} руб./час</td>
+            <td>
+                <img src="https://via.placeholder.com/50x50?text=Tutor" 
+                     alt="${tutor.name}" 
+                     class="rounded-circle"
+                     width="50" 
+                     height="50">
+            </td>
+            <td>
+                <button class="btn btn-sm ${isSelected ? 'btn-success' : 'btn-outline-primary'} select-tutor-btn" 
+                        data-tutor-id="${tutor.id}">
+                    ${isSelected ? 'Выбран' : 'Выбрать'}
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Отобразить заявки в личном кабинете
+/*
+ * Отображает заявки в личном кабинете
+ * @param {Array} orders - Массив заявок
+ * @param {number} page - Номер страницы
+ */
+function displayOrders(orders, page = 1) {
+    const tbody = document.getElementById('orders-body');
+    const noOrdersRow = document.getElementById('no-orders-row');
+    const pagination = document.getElementById('orders-pagination');
+    
+    if (!tbody) return;
+    
+    //рассчитываем, какие заявки показывать
+    const startIndex = (page - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const ordersToShow = orders.slice(startIndex, endIndex);
+    
+    //если заявок нет, показываем сообщение
+    if (orders.length === 0) {
+        if (noOrdersRow) noOrdersRow.style.display = '';
+        if (pagination) pagination.style.display = 'none';
+        updateStatistics(orders); //обновляем статистику
+        return;
+    }
+    
+     //скрываем сообщение "нет заявок" и показываем пагинацию
+    if (noOrdersRow) noOrdersRow.style.display = 'none';
+    if (pagination) pagination.style.display = 'block';
+    
+    //очищаем таблицу
+    tbody.innerHTML = '';
+    
+    //создаем строки для каждой заявки
+    ordersToShow.forEach((order, index) => {
+        const orderNumber = startIndex + index + 1; //номер по порядку
+        const orderType = order.course_id ? 'Курс' : 'Репетитор';
+        //находим название курса или репетитора
+        const orderName = order.course_id ? 
+            (allCourses.find(c => c.id === order.course_id)?.name || 'Курс') :
+            (allTutors.find(t => t.id === order.tutor_id)?.name || 'Репетитор');
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${orderNumber}</td>
+            <td>
+                <strong>${orderName}</strong>
+                <div class="small text-muted">${orderType}</div>
+            </td>
+            <td>${formatDate(order.date_start)}</td>
+            <td>${formatTime(order.time_start)}</td>
+            <td>${order.persons} чел.</td>
+            <td>${order.price} руб.</td>
+            <td>
+                <span class="badge bg-success">Активна</span>
+            </td>
+            <td>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-info view-order-btn" data-order-id="${order.id}">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-outline-warning edit-order-btn" data-order-id="${order.id}">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-outline-danger delete-order-btn" data-order-id="${order.id}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+    
+    //обновляем статистику и пагинацию
+    updateStatistics(orders);
+    setupPagination(orders, 'orders-pagination', page, (pageNum) => {
+        displayOrders(orders, pageNum);
+    });
+}
+
+// Настройка пагинации
+/*
+ * Настраивает пагинацию для таблицы
+ * @param {Array} items - Все элементы
+ * @param {string} paginationId - ID элемента пагинации
+ * @param {number} currentPage - Текущая страница
+ * @param {Function} displayFunction - Функция для отображения страницы
+ */
+function setupPagination(items, paginationId, currentPage, displayFunction) {
+    const pagination = document.getElementById(paginationId);
+    if (!pagination) return;
+    
+    //вычисляем общее количество страниц
+    const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
+    
+     //если всего одна страница, скрываем пагинацию
+    if (totalPages <= 1) {
+        pagination.innerHTML = '';
+        return;
+    }
+    
+    let paginationHTML = '';
+    
+    //кнопка "Назад"
+    if (currentPage > 1) {
+        paginationHTML += `
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="${currentPage - 1}">Предыдущая</a>
+            </li>
+        `;
+    } else {
+        paginationHTML += `
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Предыдущая</a>
+            </li>
+        `;
+    }
+    
+    //номера страниц
+    const maxVisiblePages = 5; //максимальное количество видимых страниц
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    //корректируем диапазон, если он слишком маленький
+    if (endPage - startPage + 1 < maxVisiblePages) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    //создаем ссылки на страницы
+    for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += `
+            <li class="page-item ${i === currentPage ? 'active' : ''}">
+                <a class="page-link" href="#" data-page="${i}">${i}</a>
+            </li>
+        `;
+    }
+    
+    //кнопка "Вперед"
+    if (currentPage < totalPages) {
+        paginationHTML += `
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="${currentPage + 1}">Следующая</a>
+            </li>
+        `;
+    } else {
+        paginationHTML += `
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Следующая</a>
+            </li>
+        `;
+    }
+    
+    //вставляем HTML пагинации
+    pagination.innerHTML = paginationHTML;
+    
+    //добавляем обработчики событий для ссылок пагинации
+    pagination.querySelectorAll('.page-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault(); //отменяем переход по ссылке
+            const page = parseInt(link.getAttribute('data-page'));
+            if (page && !link.parentElement.classList.contains('disabled')) {
+                displayFunction(page); //вызываем функцию отображения
+            }
+        });
+    });
+}
+
+// Обновление статистики в личном кабинете
+/*
+ * Обновляет статистику в личном кабинете
+ * @param {Array} orders - Массив заявок
+ */
+function updateStatistics(orders) {
+    //вычисляем статистику
+    const activeOrders = orders.length; //количество активных заявок
+    const totalHours = orders.reduce((sum, order) => sum + (order.duration || 0), 0); //сумма часов
+    const totalAmount = orders.reduce((sum, order) => sum + (order.price || 0), 0); //общая стоимость
+    
+    //находим элементы для отображения статистики
+    const activeEl = document.getElementById('active-orders');
+    const hoursEl = document.getElementById('total-hours');
+    const amountEl = document.getElementById('total-amount');
+    
+    //обновляем содержимое элементов
+    if (activeEl) activeEl.textContent = activeOrders;
+    if (hoursEl) hoursEl.textContent = totalHours;
+    if (amountEl) amountEl.textContent = `${totalAmount} руб.`;
+}
